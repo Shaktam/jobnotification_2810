@@ -1,4 +1,9 @@
-*_venv
---pycache--
+__pycache__
 terraform.tfstate*
-.terraform
+terraform.tfstate.backup
+.DS_Store
+.terraform/providers
+.terraform.lock.hcl
+.tfstate.backup
+.tfstate*
+venv*
