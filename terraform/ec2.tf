@@ -6,7 +6,7 @@ resource "aws_instance" "jobportal" {
   subnet_id                  = aws_subnet.public_subnet_a.id
   vpc_security_group_ids     = [aws_security_group.sg.id]
   key_name                   = "vockey"
-  user_data                  = file("userdata.sh")
+  user_data                  = file("./script/userdata1.sh")
   tags = {
     Name = "Job Notifier"
   }

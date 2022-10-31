@@ -1,7 +1,2 @@
-.terraform/providers
-.terraform.lock.hcl
-.tfstate.backup
-.tfstate*
-terraform.tfstate*
-terraform.tfstate.backup
 .terraform*
+terraform.tfstate*
