@@ -2,12 +2,41 @@ resource "aws_vpc" "myvpc" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "public_subnet_a" {
   vpc_id     = aws_vpc.myvpc.id
   cidr_block = "10.0.1.0/24"
+  availability_zone = "us-west-2a"
 
   tags = {
-    Name = "This is a public subnet"
+    Name = "public subnet1"
+  }
+}
+resource "aws_subnet" "public_subnet_b" {
+  vpc_id     = aws_vpc.myvpc.id
+  cidr_block = "10.0.2.0/24"
+  availability_zone = "us-west-2b"
+
+  tags = {
+    Name = "public subnet2"
+  }
+}
+
+resource "aws_subnet" "private_subnet_a" {
+  vpc_id     = aws_vpc.myvpc.id
+  cidr_block = "10.0.3.0/24"
+  availability_zone = "us-west-2a"
+
+  tags = {
+    Name = "private subnet1"
+  }
+}
+resource "aws_subnet" "private_subnet_b" {
+  vpc_id     = aws_vpc.myvpc.id
+  cidr_block = "10.0.4.0/24"
+  availability_zone = "us-west-2b"
+
+  tags = {
+    Name = "private subnet2"
   }
 }
 
@@ -30,46 +59,40 @@ resource "aws_route_table" "public_route_table" {
 
 resource "aws_route_table_association" "a" {
   subnet_id      = aws_subnet.public_subnet.id
-  route_table_id = aws_route_table.public_route_table.id
+  route_table_id = aws_route_table.public_route_table_a.id
 }
 
-resource "aws_security_group" "allow_http_ssh" {
-  name        = "allow_http_ssh"
-  description = "Allow http_ssh"
-  vpc_id      = aws_vpc.myvpc.id
+resource "aws_route_table_association" "b" {
+  subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.public_route_table_b.id
+}
+resource "aws_eip" "nat_ip" {
+  vpc      = true
+   tags = {
+    Name = "EIP Nat"
+  }
+}
 
-  ingress {
-    description = "Http"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  ingress {
-    description      = "SSH"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-   ingress {
-    description      = "custom"
-    from_port        = 8000
-    to_port          = 8000
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
+resource "aws_nat_gateway" "natgw" {
+  allocation_id = aws_eip.nat_ip.id
+  subnet_id     = aws_subnet.public_subnet_a.id
 
   tags = {
-    Name = "allow_http_ssh"
+    Name = "gw NAT"
+  }
+
+  # To ensure proper ordering, it is recommended to add an explicit dependency
+  # on the Internet Gateway for the VPC.
+  depends_on = [aws_internet_gateway.gw]
+}
+resource "aws_default_route_table" "private_route_table" {
+  default_route_table_id = aws_vpc.myvpc.default_route_table_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.natgw.id
+  }
+  tags = {
+    Name = "Private Route Table"
   }
 }
