@@ -5,7 +5,6 @@ mkdir bucketfold
 echo "zip files for s3"
 cd api_server
 zip ../bucketfold/api_server.zip requirements.txt
-cd api_server/source_code
 zip -r ../bucketfold/api_server.zip source_main
 cd ..
 

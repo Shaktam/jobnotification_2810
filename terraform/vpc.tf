@@ -53,6 +53,13 @@ resource "aws_security_group" "allow_http_ssh" {
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
   }
+   ingress {
+    description      = "custom"
+    from_port        = 8000
+    to_port          = 8000
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port        = 0
