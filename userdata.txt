@@ -7,3 +7,5 @@ cd bucketfold/source_main
 pip3 install -r requirements.txt
 python3 job_code.py
 
+to delete pycache
+zip -d api_sever.zip \*pycache\*
