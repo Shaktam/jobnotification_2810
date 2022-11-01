@@ -1,14 +1,14 @@
 resource "aws_lb_target_group" "job_tg" {
-  name     = "job_tg"
-  port     = 80
-  protocol = "HTTP"
+  name     = "job-tg"
+  port     = 8000
+  protocol = "custom"
   vpc_id   = aws_vpc.myvpc.id
 }
 
 resource "aws_lb_target_group_attachment" "job_tg_attach" {
   target_group_arn = aws_lb_target_group.job_tg.arn
   target_id        = aws_instance.jobportal.id
-  port             = 80
+  port             = 8000
 }
 
 resource "aws_security_group" "allow_http_lb" {
@@ -23,6 +23,12 @@ resource "aws_security_group" "allow_http_lb" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+   ingress {
+    description = "custom"
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+  }
   
   egress {
     from_port        = 0
@@ -36,25 +42,17 @@ resource "aws_security_group" "allow_http_lb" {
     Name = "allow_http_lb"
   }
 }
-# Create a new load balancer
-resource "aws_elb" "weblb" {
-  name               = "webelb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.allow_http_lb.id]
-  subnets            = [aws_subnet.public_subnet_a.id,aws_subnet.public_subnet_b.id]
-  }
 
-resource "aws_lb" "job_notifier_lb" {
-  name               = "job_notifier_lb"
+resource "aws_lb" "job_lb" {
+  name               = "job-notifier-lb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_http_lb.id]
   subnets            = [aws_subnet.public_subnet_a.id,aws_subnet.public_subnet_b.id]
 }
 resource "aws_lb_listener" "jobportal_listener" {
-  load_balancer_arn = aws_lb.job_notifier_lb.arn
-  port              = "80"
+  load_balancer_arn = aws_lb.job_lb.arn
+  port              = "8000"
   protocol          = "HTTP"
 
   default_action {
@@ -64,7 +62,7 @@ resource "aws_lb_listener" "jobportal_listener" {
 }
 
 # OUTPUT
-output "lb_public_dns_name" {
-  value = aws_lb.job_notifier_lb.dns_name
-   description = "Dns name of lb"
+output "load_balancer_dns" {
+  value       = aws_lb.job_lb.dns_name
+  description = "Dns name of lb"
 }

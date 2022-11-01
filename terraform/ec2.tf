@@ -11,6 +11,14 @@ resource "aws_security_group" "allow_http" {
     security_groups = [aws_security_group.allow_http_lb.id]
   }
 
+
+  ingress {
+    description = "custom"
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    security_groups = [aws_security_group.allow_http_lb.id]
+  }
   egress {
     from_port        = 0
     to_port          = 0
@@ -27,12 +35,15 @@ resource "aws_security_group" "allow_http" {
 resource "aws_instance" "jobportal" {
   ami                         = "ami-0d593311db5abb72b"
   instance_type               = "t3.micro"
-  associate_public_ip_address = true
-  subnet_id                  = aws_subnet.public_subnet.id
-  vpc_security_group_ids     = [aws_security_group.allow_http_ssh.id]
+  associate_public_ip_address = false
+  subnet_id                  = aws_subnet.private_subnet_b.id
+  vpc_security_group_ids     = [aws_security_group.allow_http.id]
   key_name                   = "vockey"
   user_data                  = file("./script/userdata1.sh")
   iam_instance_profile       ="LabInstanceProfile"
+   depends_on = [
+    aws_nat_gateway.natgw
+  ]
   tags = {
     Name = "Job Notifier"
   }

@@ -58,13 +58,13 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.public_subnet.id
-  route_table_id = aws_route_table.public_route_table_a.id
+  subnet_id      = aws_subnet.public_subnet_a.id
+  route_table_id = aws_route_table.public_route_table.id
 }
 
 resource "aws_route_table_association" "b" {
-  subnet_id      = aws_subnet.private_subnet.id
-  route_table_id = aws_route_table.public_route_table_b.id
+  subnet_id      = aws_subnet.public_subnet_b.id
+  route_table_id = aws_route_table.public_route_table.id
 }
 resource "aws_eip" "nat_ip" {
   vpc      = true
