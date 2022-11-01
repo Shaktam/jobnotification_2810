@@ -1,14 +1,14 @@
 resource "aws_lb_target_group" "job_tg" {
   name     = "job-tg"
-  port     = 8000
-  protocol = "custom"
+  port     = 80
+  protocol = "HTTP"
   vpc_id   = aws_vpc.myvpc.id
 }
 
 resource "aws_lb_target_group_attachment" "job_tg_attach" {
   target_group_arn = aws_lb_target_group.job_tg.arn
   target_id        = aws_instance.jobportal.id
-  port             = 8000
+  port             = 80
 }
 
 resource "aws_security_group" "allow_http_lb" {
@@ -22,12 +22,6 @@ resource "aws_security_group" "allow_http_lb" {
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-   ingress {
-    description = "custom"
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
   }
   
   egress {
@@ -52,7 +46,7 @@ resource "aws_lb" "job_lb" {
 }
 resource "aws_lb_listener" "jobportal_listener" {
   load_balancer_arn = aws_lb.job_lb.arn
-  port              = "8000"
+  port              = "80"
   protocol          = "HTTP"
 
   default_action {

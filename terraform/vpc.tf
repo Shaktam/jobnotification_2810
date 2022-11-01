@@ -42,6 +42,9 @@ resource "aws_subnet" "private_subnet_b" {
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.myvpc.id
+  tags = {
+    Name = "gw Internet"
+  }
 }
 
 resource "aws_route_table" "public_route_table" {

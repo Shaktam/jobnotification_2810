@@ -11,14 +11,6 @@ resource "aws_security_group" "allow_http" {
     security_groups = [aws_security_group.allow_http_lb.id]
   }
 
-
-  ingress {
-    description = "custom"
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
-    security_groups = [aws_security_group.allow_http_lb.id]
-  }
   egress {
     from_port        = 0
     to_port          = 0
