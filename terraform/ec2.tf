@@ -6,6 +6,7 @@ resource "aws_instance" "jobportal" {
   vpc_security_group_ids     = [aws_security_group.allow_http_ssh.id]
   key_name                   = "vockey"
   user_data                  = file("./script/userdata1.sh")
+  iam_instance_profile       ="LabInstanceProfile"
   tags = {
     Name = "Job Notifier"
   }

@@ -9,3 +9,5 @@ python3 job_code.py
 
 to delete pycache
 zip -d api_sever.zip \*pycache\*
+
+join(":",["arn","aws","iam","",data.aws_caller_identity.current.account_id,":instance-profile/LabInstanceProfile"])
