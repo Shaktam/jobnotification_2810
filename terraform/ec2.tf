@@ -1,12 +1,11 @@
 resource "aws_instance" "jobportal" {
-
   ami                         = "ami-0d593311db5abb72b"
-  instance_type               = "t2.micro"
+  instance_type               = "t3.micro"
   associate_public_ip_address = true
   subnet_id                  = aws_subnet.public_subnet.id
   vpc_security_group_ids     = [aws_security_group.allow_http_ssh.id]
   key_name                   = "vockey"
-  user_data                  = file("./script/userdata1.sh")
+  user_data                  = file("./script/userdata.sh")
   tags = {
     Name = "Job Notifier"
   }
