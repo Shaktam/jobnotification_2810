@@ -35,6 +35,10 @@ jobs = [{
         "job_Description": "Software Development, Analysis, Maintenance, Planning and Project Management"
     }]
 
+@app.get("/")
+def health():
+    return {"health": "ok"}
+
 @app.get("/job")
 def joblist():
     return jobs
