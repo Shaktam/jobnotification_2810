@@ -26,4 +26,4 @@ jobs:
           terraform apply -auto-approve
       - name: terminate oldest instance
         run: |
-         aws autoscaling update-auto-scaling-group --auto-scaling-group-name terraform-20221102000654553300000001 --termination-policies "OldestInstance"             
+         aws autoscaling update-auto-scaling-group --auto-scaling-group-name terraform-20221102180649199600000002 --termination-policies "OldestInstance"             
