@@ -144,3 +144,10 @@ resource "aws_security_group" "sg" {
     Name = "Allow_HTTP_SSH"
   }
 }
+
+
+resource "aws_lb_target_group_attachment" "job_tg_attach" {
+  target_group_arn = aws_lb_target_group.job_tg.arn
+  target_id        = aws_instance.jobportal.id
+  port             = 80
+}

@@ -1,8 +1,13 @@
-resource "aws_launch_template" "template" {
-  name = "launch-template-terraform"
+
+resource "aws_launch_template" "job-portal-template" {
+  name = "launch-job-portal-template-terraform"
 
   credit_specification {
     cpu_credits = "standard"
+  }
+
+  iam_instance_profile {
+    name = "LabInstanceProfile"
   }
 
   image_id = "ami-0d593311db5abb72b"
@@ -27,9 +32,12 @@ resource "aws_autoscaling_group" "autoscale_job_portal" {
   min_size            = 1
 
   launch_template {
-    id      = aws_launch_template.template.id
+    id      = aws_launch_template.job-portal-template.id
     version = "$Latest"
   }
+  depends_on = [
+    aws_nat_gateway.natgw
+  ]
 }
 
 resource "aws_autoscaling_attachment" "asg_attachment_bar" {

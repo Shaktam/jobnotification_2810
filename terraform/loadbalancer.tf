@@ -5,12 +5,6 @@ resource "aws_lb_target_group" "job_tg" {
   vpc_id   = aws_vpc.myvpc.id
 }
 
-resource "aws_lb_target_group_attachment" "job_tg_attach" {
-  target_group_arn = aws_lb_target_group.job_tg.arn
-  target_id        = aws_instance.jobportal.id
-  port             = 80
-}
-
 resource "aws_security_group" "allow_http_lb" {
   name        = "allow_http_lb"
   description = "Allow http_lb"
