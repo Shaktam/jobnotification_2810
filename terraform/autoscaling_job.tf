@@ -32,7 +32,7 @@ resource "aws_autoscaling_group" "autoscale_job_portal" {
   min_size            = 1
 
   launch_template {
-    id      = aws_launch_template.job-portal-template.id
+    id      = aws_launch_template.job-portal-instancetemplate.id
     version = "$Latest"
   }
   depends_on = [
