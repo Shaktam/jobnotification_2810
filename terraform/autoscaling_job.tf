@@ -1,6 +1,6 @@
 
-resource "aws_launch_template" "job-portal-template" {
-  name = "launch-job-portal-template-terraform"
+resource "aws_launch_template" "job-portal-instancetemplate" {
+  name = "launch-job-portal-instancetemplate-terraform"
 
   credit_specification {
     cpu_credits = "standard"
