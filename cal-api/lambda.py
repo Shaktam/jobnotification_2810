@@ -22,7 +22,12 @@ def get_job_data():
     for data in job_data["data"]:
         s3.meta.client.upload_file('job_data.json', 'jobdatas3buck', 'job_data' + str(i)+'.json')
         i+=1
-    return job_data
-job_data=get_job_data()
+
+def lambda_handler(event, context):
+    get_job_data()
+
+    
+"""  return job_data
+job_data=get_job_data()"""
 
 

@@ -2,7 +2,8 @@
 import boto3
 import requests
 import json
-   
+
+  
 url = "https://www.arbeitnow.com/api/job-board-api"
 response = requests.get(url)
 jobdata = response.json()
@@ -20,7 +21,6 @@ with open('job_data.json', "w") as f:
 
 i =1
 for data in jobdata["data"]:
-    
     s3.meta.client.upload_file('job_data.json', 'jobdatas3buck', 'job_data' + str(i)+'.json')
     i+=1
 
