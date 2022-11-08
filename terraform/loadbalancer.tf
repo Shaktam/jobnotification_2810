@@ -1,4 +1,4 @@
-resource "aws_lb_target_group" "job_tg" {
+resource "aws_lb_target_group" "job_webserver_tg" {
   name     = "job-tg"
   port     = 80
   protocol = "HTTP"
@@ -31,26 +31,26 @@ resource "aws_security_group" "allow_http_lb" {
   }
 }
 
-resource "aws_lb" "job_lb" {
-  name               = "job-notifier-lb"
+resource "aws_lb" "job_notifier_lb" {
+  name               = "job-notifier123-lb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_http_lb.id]
   subnets            = [aws_subnet.public_subnet_a.id,aws_subnet.public_subnet_b.id]
 }
 resource "aws_lb_listener" "jobportal_listener" {
-  load_balancer_arn = aws_lb.job_lb.arn
+  load_balancer_arn = aws_lb.job_notifier_lb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.job_tg.arn
+    target_group_arn = aws_lb_target_group.job_webserver_tg.arn
   }
 }
 
 # OUTPUT
 output "load_balancer_dns" {
-  value       = aws_lb.job_lb.dns_name
+  value       = aws_lb.job_notifier_lb.dns_name
   description = "Dns name of lb"
 }
