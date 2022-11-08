@@ -10,3 +10,11 @@ cd ..
 
 echo "upload to s3"
 aws s3 cp bucketfold/api_server.zip s3://job-terraform-bucket-alb/
+
+cd cal-api/job_crawler
+zip -r ../../bucketfold/job_crawler.zip .
+
+cd ../..
+
+echo "upload to s3"
+aws s3 cp bucketfold/job_crawler.zip s3://job-terraform-bucket-alb/
